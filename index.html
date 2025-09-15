@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>物流信息网 - 专业物流查询服务平台</title>
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+		<!-- 新 Bootstrap5 核心 CSS 文件 -->
+		<link rel="stylesheet" href="https://cdn.staticfile.net/twitter-bootstrap/5.1.1/css/bootstrap.min.css">
+		 
+		<!-- 最新的 Bootstrap5 核心 JavaScript 文件 -->
+		<script src="https://cdn.staticfile.net/twitter-bootstrap/5.1.1/js/bootstrap.bundle.min.js"></script>
+		<!-- 引用css文件 -->
+		<link rel="stylesheet" href="css/nuc.css"/>
+		<!-- layui CSS -->
+		<link href="//unpkg.com/layui@2.11.6/dist/css/layui.css" rel="stylesheet">
+		
+	</head>
+	<body>
+    <header>
+        <div class="container">
+            <div class="logo">
+                <i class="fas fa-truck"></i>
+                物流信息网
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="#query">物流查询</a></li>
+                    <li><a href="#services">服务介绍</a></li>
+                    <li><a href="#tracking">实时追踪</a></li>
+                    <li><a href="#price">价格查询</a></li>
+                    <li><a href="#contact">联系我们</a></li>
+                    <li><a href="#faq">常见问题</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+	
+	<div class="container">
+		<section id="query" class="module">
+			<h2 class="module-title">
+				<i class="fas fa-serch"></i>
+				物流信息查询
+			</h2>
+			<div class="form-group">
+				<lable for="waybill">运单号</lable>
+				<input type="text" id="waybill" placeholder="如SF1234567890123">
+			</div>
+			<div class="form-group">
+				<label for="company">物流公司</label>
+				<select id="company">
+					<option value="">请选择</option>
+					<option value="sf">顺丰速运</option>
+					<option value="jd">京东物流</option>
+					<option value="yd">韵达快递</option>
+				</select>
+			</div>
+			<button onclick="queryLogistics()">查询物流</button>
+		</section>
+		<!-- /*服务介绍模块*/ -->
+	
+	<section id="services" class="module">
+		<h2 class="module-title">
+			<i class="fas fa-concierge-bell"></i>
+			服务介绍
+		</h2>
+		<div class="services">
+			<div class="services-item">
+				<h3>国内快递</h3>
+				<p>覆盖全国3000+城市，次日达/隔日达可选，全程跟踪。</p>
+			</div>
+			<div class="services-item">
+				<h3>国际物流</h3>
+				<p>全球配送，支持海运/空运/陆运，清关便捷，时效保障。</p>
+			</div>
+			<div class="services-item">
+				<h3>仓储配送</h3>
+				<p>专业仓储管理，智能库存系统，支持一件代发。</p>
+			</div>
+		</div>
+	</section>
+	
+<!-- 实时物流追踪模块 -->	
+	<section id="tracking" class="module">
+		<h2 class="module-title">
+			<i class="fas fa-map-marker-alt"></i>
+			实时物流追踪
+		</h2>
+		<div class="form-group">
+			<label for="track-waybill">运单号</label>
+			<input type="text" id="track-waybill" placeholder="请输入运单号"/>
+		</div>
+		<button onclick="showTracking()">显示追踪信息</button>
+		<div id="tracking-result" class="tracking-steps" style="display: none;">
+			<div class="step">
+				<h4>包裹已签收</h4>
+				<p class="step-time">2023-09-12 08:50</p>
+				<p>签收人：李公子</p>
+			</div>
+			<div class="step">
+				<h4>正在派送中</h4>
+				<p class="step-time">2023-09-12 10:50</p>
+				<p>派送员：杨公子</p>
+			</div>
+			<div class="step">
+				<h4>到达目的地网点</h4>
+				<p class="step-time">2023-09-12 16:50</p>
+			</div>
+		</div>
+	</section>
+	
+	<!-- 物流查询模块 -->
+	<section id="price" class="module">
+		<h2 class="module-title">
+			<i class="fas fa-calculator"></i>
+			物流价格查询
+		</h2>
+		<div class="form-group">
+			<label for="from">出发地</label>
+			<input type="text" id="from" placeholder="如:大同"/>
+		</div>
+		<div class="form-group">
+			<label for="to">目的地</label>
+			<input type="text" id="to" placeholder="如:太原"/>
+		</div>
+		<div class="form-group">
+			<label for="weight">货物重量(kg)</label>
+			<input type="number" id="weight" placeholder="重量" min="0.1" step="0.1">
+		</div>
+		<div>
+			<button onclick="calculatePrice()">计算价格</button>
+		</div>
+		<div id="price-result" class="price-result">
+			<h4>预估价格信息</h4>
+			<p>运费：<span id="price-value">¥0.00</span></p>
+			<p>预计时效：<span id="delivery-time">0天</span></p>
+		</div>
+	</section>
+	
+	<!-- 联系我们模块 -->
+	<section id="contact" class="module">
+		<h2 class="module-title">
+			<i class="fas fa-address-card"></i><!-- 名片图标 -->
+			联系我们
+		</h2>
+		<div class="contact-info">
+			<div  class="contact-item">
+				<i class="fas fa-phone-alt"></i><!-- 电话图标 -->
+				<h3>客服电话</h3>
+				<p>400-123-4567</p>
+			</div>
+			<div class="contact-item">
+				<i class="fas fa-envelope"></i>
+				<h3>电子邮箱</h3>
+				<p>service@wuliuxinxi.com</p>
+			</div>
+		</div>
+		<div>
+			<h3>在线咨询</h3>
+			<div class="form-group">
+				<label for="name">姓名</label>
+				<input type="text" id="name" placeholder="您的姓名"/>
+			</div>
+			<div class="form-group">
+				<label for="message">咨询内容</label>
+				<input id="message" rows="2" placeholder="请输入咨询内容"/>
+			</div>
+			<button onclick="sendMessage()">提交咨询</button>
+		</div>
+	</section>
+	
+	<!-- 常见问题模块 -->
+	<section id="faq" class="module">
+		<h2 class="module-title">
+			<i class="fas fa-question-circle"></i>
+			常见问题
+		</h2>
+		<div class="faq-item">
+			<button class="faq-question" onclick="toggleFaq(this)">
+				如何查询物流信息
+				<span>+</span>
+			</button>
+			<div class="faq-answer">
+				在"物流信息查询"模块输入运单号，选择物流公司，点击查询即可
+			</div>
+		</div>
+		<div class="faq-item">
+			<button class="faq-question" onclick="toggleFaq(this)">
+				物流运输需要多久
+				<span>+</span>
+			</button>
+			<div class="faq-answer">
+				国内快递一般1-5天，同城1-2天，跨省3-5天;
+			</div>
+		</div>
+		<div class="faq-link">
+			<button class="faq-question" onclick="toggleFaq(this)">
+				为什么暂无物流信息
+				<span>+</span>
+			</button>
+			<div class="faq-answer">
+				商家没有给物流公司送货，主动联系商家进行解决
+			</div>
+		</div>
+	</section>
+	<li><a href="#knowledge">物流知识</a></li>
+	
+	<!-- 物流知识模块 -->
+	<section id="knowledge" class="module">
+	    <h2 class="module-title">
+	        <i class="fas fa-book"></i>
+	        物流知识
+	    </h2>
+	    <div class="knowledge-categories">
+	        <div class="knowledge-item">
+	            <h3>物流术语解释</h3>
+	            <ul class="knowledge-list">
+	                <li><strong>FBA</strong>：亚马逊物流服务，指卖家将商品存储在亚马逊仓库，由亚马逊负责配送</li>
+	                <li><strong>COD</strong>：货到付款，收件人签收时支付货款的结算方式</li>
+	                <li><strong>跨境电商物流</strong>：连接不同国家和地区之间的电子商务物流服务</li>
+	                <li><strong>最后一公里</strong>：货物从配送中心到最终用户手中的最后一段运输</li>
+	            </ul>
+	        </div>
+	        
+	        <div class="knowledge-item">
+	            <h3>包装指南</h3>
+	            <ul class="knowledge-list">
+	                <li>易碎品需使用缓冲材料（气泡膜、泡沫等）包裹严实</li>
+	                <li>液体物品需密封后再装箱，防止泄漏污染其他货物</li>
+	                <li>重物建议使用硬纸箱，并用打包带加固</li>
+	                <li>不规则物品建议先装袋再装箱，避免运输中损坏</li>
+	            </ul>
+	        </div>
+	        
+	        <div class="knowledge-item">
+	            <h3>物流保险</h3>
+	            <p>物流保险可保障货物在运输过程中的丢失、损坏风险，常见险种包括：</p>
+	            <ul class="knowledge-list">
+	                <li>国内货物运输险：适用于国内公路、铁路、水路运输</li>
+	                <li>国际货物运输险：分平安险、水渍险、一切险等</li>
+	                <li>物流责任险：保障物流企业因操作失误造成的货物损失</li>
+	            </ul>
+	        </div>
+	    </div>
+	</section>
+	
+	<li><a href="#cases">物流案例</a></li>
+	
+	<!-- 物流案例模块 -->
+	<section id="cases" class="module">
+	    <h2 class="module-title">
+	        <i class="fas fa-briefcase"></i>
+	        物流案例
+	    </h2>
+	    <div class="cases-container">
+	        <div class="case-card">
+	            <div class="case-img">
+	                <img src="img/34241b18f9044d1936ab444e656262cb.jpg" alt="电商大促物流解决方案" width="100%" height="180px" object-fit="cover">
+	            </div>
+	            <div class="case-content">
+	                <h3>电商大促物流解决方案</h3>
+	                <p>针对双十一期间订单暴涨情况，通过前置仓布局+临时运力调配，实现订单48小时内履约率98%。</p>
+	                <button class="case-btn">查看详情</button>
+	            </div>
+	        </div>
+	        
+	        <div class="case-card">
+	            <div class="case-img">
+	                <img src="img/0177c7ef467f8cfc0119235084aa62d4.jpg" alt="生鲜冷链物流" width="100%" height="180px" object-fit="cover">
+	            </div>
+	            <div class="case-content">
+	                <h3>生鲜冷链物流方案</h3>
+	                <p>全程温控系统确保生鲜产品新鲜度，从产地到餐桌24小时直达，损耗率控制在3%以内。</p>
+	                <button class="case-btn">查看详情</button>
+	            </div>
+	        </div>
+	        
+	        <div class="case-card">
+	            <div class="case-img">
+	                <img src="img/e82c8fefc78d0af3c8c1722297f89fdd.jpg" alt="跨境电商物流" width="100%" height="180px" object-fit="cover">
+	            </div>
+	            <div class="case-content">
+	                <h3>跨境电商物流方案</h3>
+	                <p>整合海外仓资源，实现欧美地区72小时送达，清关效率提升50%，物流成本降低20%。</p>
+	                <button class="case-btn">查看详情</button>
+	            </div>
+	        </div>
+	    </div>
+	</section>
+	
+	</div>
+	<!-- 返回顶部按钮 -->
+	<div class="back-to-top" id="backToTop" onclick="scrollToTop()">
+        <i class="fas fa-arrow-up"></i> <!-- 上箭头图标 -->
+    </div>
+	<footer>
+		<div class="container">
+			<p>© 2023 物流信息网 版权所有</p>
+		</div>
+	</footer>
+	<script>
+		function queryLogistics(){
+			const waybill = document.getElementById('waybill').value;
+			const company = document.getElementById('company').value;
+			if(!waybill||!company){
+				alert('请输入运单号并选择物流公司');
+				return false;
+			}else{
+				alert('查询结果:正在运输中');
+			}
+		}
+		
+		function showTracking() {
+			const trackWaybill = document.getElementById('track-waybill').value;
+			if (!trackWaybill) {
+				alert('请输入运单号');
+				return false;
+			}
+			document.getElementById('tracking-result').style.display = 'block';
+		}
+		
+		function calculatePrice(){
+			const from = document.getElementById('from').value;
+			const to = document.getElementById('to').value;
+			const weight = parseFloat(document.getElementById('weight').value);
+			if(!from||!to||!weight){
+				alert('请完善信息');
+				return false;
+			}
+			const price = 15 + weight * 8; // 15元基础费 + 8元/kg
+			const days = Math.floor(Math.random() * 4) + 2;
+			
+			document.getElementById('price-value').textContent = `¥${price.toFixed(2)}`;
+			document.getElementById('delivery-time').textContent = `${days}天`;
+			document.getElementById('price-result').style.display = 'block'; 
+		}
+		function sendMessage() {
+		    const name = document.getElementById('name').value;
+		    const message = document.getElementById('message').value;
+		    if (!name || !message) {
+		        alert('请输入姓名和咨询内容');
+		        return false;
+		    }
+		        alert('咨询已提交，我们会尽快回复您！');
+		    document.getElementById('name').value = '';
+		    document.getElementById('message').value = '';
+		    }
+		function toggleFaq(element){
+			const answer = element.nextElementSibling;
+			const symbol = element.querySelector('span');
+			answer.classList.toggle('active');
+			symbol.textContent = answer.classList.contains('active') ? '-' : '+';
+		}	
+		function scrollToTop() {
+		    window.scrollTo({ top: 0, behavior: 'smooth' }); // smooth参数实现平滑滚动
+		}
+		window.addEventListener('scroll', () => {
+		            const backToTopBtn = document.getElementById('backToTop');
+		            
+		            if (window.scrollY ;> 300) {
+		                backToTopBtn.style.display = 'flex';
+		            } else {
+		                backToTopBtn.style.display = 'none';
+		            }
+		        });
+		document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+				    anchor.addEventListener('click', function(e) {
+				        e.preventDefault(); // 阻止默认锚点跳转行为
+				        
+				        const targetId = this.getAttribute('href');
+				      
+				        document.querySelector(targetId).scrollIntoView({
+				            behavior: 'smooth'
+				        });
+				    });
+				});
+	</script>
+	
+	</body>
+</html>
+
